@@ -20,9 +20,9 @@ namespace TileBasedPlayer20172018
         int tileHeight = 64;
         List<TileRef> TileRefs = new List<TileRef>();
         List<Collider> colliders = new List<Collider>();
-        string[] backTileNames = { "blue box", "pavement", "ground", "green", "home" };
-        bool allTanksDestroyed = false;
-        public enum TileType { BLUEBOX, PAVEMENT, GROUND, GREEN ,HOME };
+        string[] backTileNames = { "blue box", "pavement", "ground", "green", "home", "exit"};
+        bool allTanksDestroyed = true;
+        public enum TileType { BLUEBOX, PAVEMENT, GROUND, GREEN ,HOME, EXIT };
         int[,] tileMap = new int[,]
     {
         {2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2},
@@ -40,7 +40,7 @@ namespace TileBasedPlayer20172018
         {2,2,2,2,2,2,1,1,1,1,1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,2,2,2,2,2,1,1,1,1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2},
         {2,2,2,2,2,2,1,1,1,1,1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,2,2,2,2,2,1,1,1,1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2},
         {2,2,2,2,2,2,2,2,2,2,2,3,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,2,2,2,2,2,1,1,1,1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2},
-        {2,2,2,2,2,2,2,2,2,2,2,2,1,1,1,1,1,1,1,3,2,2,2,2,2,2,2,2,2,2,2,2,1,1,1,3,1,1,1,3,1,1,1,1,2,2,2,2,2,2,2,2},
+        {2,2,2,2,2,2,2,2,2,2,2,2,1,1,1,1,1,1,1,3,2,2,2,2,2,2,2,2,2,2,2,2,1,1,1,3,1,5,1,3,1,1,1,1,2,2,2,2,2,2,2,2},
         {2,2,2,2,2,2,2,2,2,2,2,2,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,2,2,2,2,3,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
         {2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
         {2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2},
@@ -93,12 +93,13 @@ namespace TileBasedPlayer20172018
 
             // Tile References to be drawn on the Map corresponding to the entries in the defined 
             // Tile Map
-            // "free", "pavement", "ground", "blue", "home" 
+            // "free", "pavement", "ground", "blue", "home", "exit" 
             TileRefs.Add(new TileRef(4, 2, 0));
             TileRefs.Add(new TileRef(3, 3, 1));
             TileRefs.Add(new TileRef(6, 3, 2));
             TileRefs.Add(new TileRef(6, 2, 3));
             TileRefs.Add(new TileRef(0, 2, 4));
+            TileRefs.Add(new TileRef(1, 2, 5));
             // Names fo the Tiles
             
             new SimpleTileLayer(this, backTileNames, tileMap, TileRefs, tileWidth, tileHeight);
@@ -143,7 +144,7 @@ namespace TileBasedPlayer20172018
 
             if(allTanksDestroyed)
             {
-                
+                tileMap[15, 37] = (int)TileType.EXIT;
             }
 
             base.Update(gameTime);
