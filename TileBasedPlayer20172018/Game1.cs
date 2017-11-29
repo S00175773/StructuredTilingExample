@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
 using Tiler;
 using Tiling;
+using Microsoft.Xna.Framework.Audio;
 
 namespace TileBasedPlayer20172018
 {
@@ -14,6 +15,12 @@ namespace TileBasedPlayer20172018
     /// </summary>
     public class Game1 : Game
     {
+        SoundEffect explosion;
+        SoundEffect shoot;
+        SoundEffect backgroundAudio;
+        SoundEffect gameOver;
+
+
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         int tileWidth = 64;
@@ -121,7 +128,10 @@ namespace TileBasedPlayer20172018
             }, 64, 64, 0f);
             }
 
-
+            explosion = Content.Load<SoundEffect>("SoundFiles/Explosion");
+            backgroundAudio = Content.Load<SoundEffect>("SoundFiles/Battle_in_the_winter");
+            gameOver = Content.Load<SoundEffect>("SoundFiles/Game_Over");
+            shoot = Content.Load<SoundEffect>("SoundFiles/TankShot");
 
             // TODO: use this.Content to load your game content here
         }
