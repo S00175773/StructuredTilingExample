@@ -53,6 +53,7 @@
     <Compile Include="SimpleTileLayer.cs" />
     <Compile Include="Sprite.cs" />
     <Compile Include="Tile.cs" />
+    <Compile Include="TileSentry.cs" />
     <Compile Include="TilePlayer.cs" />
     <Compile Include="TileRef.cs" />
   </ItemGroup>

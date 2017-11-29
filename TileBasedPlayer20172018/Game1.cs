@@ -40,10 +40,10 @@ namespace TileBasedPlayer20172018
         {2,2,2,2,2,2,1,1,1,1,1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,2,2,2,2,2,1,1,1,1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2},
         {2,2,2,2,2,2,1,1,1,1,1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,2,2,2,2,2,1,1,1,1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2},
         {2,2,2,2,2,2,2,2,2,2,2,3,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,2,2,2,2,2,1,1,1,1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2},
-        {2,2,2,2,2,2,2,2,2,2,2,2,1,1,1,1,1,1,1,3,2,2,2,2,2,2,2,2,2,2,2,2,1,1,1,3,1,5,1,3,1,1,1,1,2,2,2,2,2,2,2,2},
+        {2,2,2,2,2,2,2,2,2,2,2,2,1,1,1,1,1,1,1,3,2,2,2,2,2,2,2,2,2,2,2,2,1,1,1,3,1,1,1,3,1,1,1,1,2,2,2,2,2,2,2,2},
         {2,2,2,2,2,2,2,2,2,2,2,2,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,2,2,2,2,3,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
-        {2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
-        {2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2},
+        {2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
+        {2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,5,2,2,2,2,2,2,2,2,2,2,2,2,2,2},
     };
         public Game1()
         {
@@ -100,11 +100,29 @@ namespace TileBasedPlayer20172018
             TileRefs.Add(new TileRef(6, 2, 3));
             TileRefs.Add(new TileRef(0, 2, 4));
             TileRefs.Add(new TileRef(1, 2, 5));
-            // Names fo the Tiles
-            
+
+            // Names fo the Tiles            
             new SimpleTileLayer(this, backTileNames, tileMap, TileRefs, tileWidth, tileHeight);
 
             List<Tile> greenTiles = SimpleTileLayer.GetNamedTiles("green");
+
+            //sentry sprite
+            for (int i = 0; i < greenTiles.Count; i++)
+            {
+                TileSentry sentry = new TileSentry(this, new Vector2(greenTiles[i].X * 64, greenTiles[i].Y * 64), new List<TileRef>()
+            {
+                new TileRef(21, 2, 0),
+                new TileRef(21, 3, 0),
+                new TileRef(21, 4, 0),
+                new TileRef(21, 5, 0),
+                new TileRef(21, 6, 0),
+                new TileRef(21, 7, 0),
+                new TileRef(21, 8, 0),
+            }, 64, 64, 0f);
+            }
+
+
+
             // TODO: use this.Content to load your game content here
         }
 
@@ -142,9 +160,9 @@ namespace TileBasedPlayer20172018
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            if(allTanksDestroyed)
+            if (allTanksDestroyed)
             {
-                tileMap[15, 37] = (int)TileType.EXIT;
+                //not working, should set tile at [15,37] to the exit tile once every sentry was destroyed
             }
 
             base.Update(gameTime);
@@ -158,7 +176,6 @@ namespace TileBasedPlayer20172018
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            // TODO: Add your drawing code here
 
             base.Draw(gameTime);
         }
