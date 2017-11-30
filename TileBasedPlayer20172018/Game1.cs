@@ -27,9 +27,12 @@ namespace TileBasedPlayer20172018
         int tileHeight = 64;
         List<TileRef> TileRefs = new List<TileRef>();
         List<Collider> colliders = new List<Collider>();
-        string[] backTileNames = { "blue box", "pavement", "ground", "green", "home", "exit"};
+        List<TileSentry> sentries = new List<TileSentry>();
+        string[] backTileNames = { "blue box", "pavement", "ground", "green", "home", "exit" };
         bool allTanksDestroyed = true;
-        public enum TileType { BLUEBOX, PAVEMENT, GROUND, GREEN ,HOME, EXIT };
+
+        bool soundPlaying;
+        public enum TileType { BLUEBOX, PAVEMENT, GROUND, GREEN, HOME, EXIT };
         int[,] tileMap = new int[,]
     {
         {2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2},
@@ -49,8 +52,8 @@ namespace TileBasedPlayer20172018
         {2,2,2,2,2,2,2,2,2,2,2,3,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,2,2,2,2,2,1,1,1,1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2},
         {2,2,2,2,2,2,2,2,2,2,2,2,1,1,1,1,1,1,1,3,2,2,2,2,2,2,2,2,2,2,2,2,1,1,1,3,1,1,1,3,1,1,1,1,2,2,2,2,2,2,2,2},
         {2,2,2,2,2,2,2,2,2,2,2,2,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,2,2,2,2,3,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
-        {2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
-        {2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,5,2,2,2,2,2,2,2,2,2,2,2,2,2,2},
+        {2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
+        {2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2},
     };
         public Game1()
         {
@@ -126,6 +129,7 @@ namespace TileBasedPlayer20172018
                 new TileRef(21, 7, 0),
                 new TileRef(21, 8, 0),
             }, 64, 64, 0f);
+                sentries.Add(sentry);
             }
 
             explosion = Content.Load<SoundEffect>("SoundFiles/Explosion");
@@ -170,9 +174,25 @@ namespace TileBasedPlayer20172018
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
+            if(!soundPlaying)
+            {
+                backgroundAudio.Play();
+                soundPlaying = true;
+            }
+
+            TilePlayer player = Services.GetService<TilePlayer>();
+
+            for (int i = 0; i < sentries.Count; i++)
+            {
+                if (sentries[i].inChaseZone(player))
+                {
+                    sentries[i].follow(player);
+                }
+            }
+
             if (allTanksDestroyed)
             {
-                //not working, should set tile at [15,37] to the exit tile once every sentry was destroyed
+                SimpleTileLayer.Tiles[15, 37].TileRef = TileRefs[5];
             }
 
             base.Update(gameTime);

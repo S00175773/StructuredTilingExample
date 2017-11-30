@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Tiling;
+using Helpers;
 
 namespace Tiler
 {
@@ -24,6 +25,7 @@ namespace Tiler
                 : base(game, userPosition, sheetRefs, frameWidth, frameHeight, layerDepth)
         {
             DrawOrder = 1;
+            
             
         }
 
