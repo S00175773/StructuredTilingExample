@@ -27,9 +27,10 @@ namespace TileBasedPlayer20172018
         int tileHeight = 64;
         List<TileRef> TileRefs = new List<TileRef>();
         List<Collider> colliders = new List<Collider>();
-        string[] backTileNames = { "blue box", "pavement", "ground", "green", "home", "exit"};
-        bool allTanksDestroyed = true;
-        public enum TileType { BLUEBOX, PAVEMENT, GROUND, GREEN ,HOME, EXIT };
+        List<TileSentry> sentries = new List<TileSentry>();
+        string[] backTileNames = { "blue box", "pavement", "ground", "green", "home", "exit" };
+        bool allTanksDestroyed = false;
+        public enum TileType { BLUEBOX, PAVEMENT, GROUND, GREEN, HOME, EXIT };
         int[,] tileMap = new int[,]
     {
         {2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2},
@@ -126,6 +127,7 @@ namespace TileBasedPlayer20172018
                 new TileRef(21, 7, 0),
                 new TileRef(21, 8, 0),
             }, 64, 64, 0f);
+                sentries.Add(sentry);
             }
 
             explosion = Content.Load<SoundEffect>("SoundFiles/Explosion");
@@ -170,9 +172,19 @@ namespace TileBasedPlayer20172018
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
+            TilePlayer player = Services.GetService<TilePlayer>();
+
+            for (int i = 0; i < sentries.Count; i++)
+            {
+                if (sentries[i].inChaseZone(player))
+                {
+                    sentries[i].follow(player);
+                }
+            }
+
             if (allTanksDestroyed)
             {
-                //not working, should set tile at [15,37] to the exit tile once every sentry was destroyed
+                tileMap[15, 37] = 5;
             }
 
             base.Update(gameTime);
