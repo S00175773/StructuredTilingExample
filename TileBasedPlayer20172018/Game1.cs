@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
 using Tiler;
 using Tiling;
+using Helpers;
 using Microsoft.Xna.Framework.Audio;
 
 namespace TileBasedPlayer20172018
@@ -83,6 +84,8 @@ namespace TileBasedPlayer20172018
                 new TileRef(15, 7, 0),
                 new TileRef(15, 8, 0),
             }, 64, 64, 0f));
+            TilePlayer tilePlayer = Services.GetService<TilePlayer>();
+            tilePlayer.AddHealthBar(new HealthBar(tilePlayer.Game, tilePlayer.PixelPosition));
             SetColliders(TileType.GROUND);
             SetColliders(TileType.BLUEBOX);
             SetColliders(TileType.GREEN);
