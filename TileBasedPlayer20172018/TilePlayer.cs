@@ -17,7 +17,7 @@ namespace Tiler
         //List<TileRef> images = new List<TileRef>() { new TileRef(15, 2, 0)};
         //TileRef currentFrame;
         int speed = 5;
-        float turnspeed = 0.03f;
+        float turnspeed = 0.09f;
         public Vector2 previousPosition;
 
         public TilePlayer(Game game, Vector2 userPosition, 
@@ -41,18 +41,22 @@ namespace Tiler
             if (Keyboard.GetState().IsKeyDown(Keys.D))
             {
                 this.PixelPosition += new Vector2(1, 0) * speed;
+                this.angleOfRotation = 0;
             }
             if (Keyboard.GetState().IsKeyDown(Keys.A))
             {
                 this.PixelPosition += new Vector2(-1, 0) * speed;
+                this.angleOfRotation = 3.15f;
             }
             if (Keyboard.GetState().IsKeyDown(Keys.W))
             {
                 this.PixelPosition += new Vector2(0, -1) * speed;
+                this.angleOfRotation = 4.7f;
             }
             if (Keyboard.GetState().IsKeyDown(Keys.S))
             {
                 this.PixelPosition += new Vector2(0, 1) * speed;
+                this.angleOfRotation = 1.55f;
             }
             if (Keyboard.GetState().IsKeyDown(Keys.Z))
                 this.angleOfRotation -= turnspeed;
