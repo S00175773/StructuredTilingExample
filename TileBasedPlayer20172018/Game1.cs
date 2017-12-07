@@ -11,6 +11,8 @@ using Helpers;
 using Microsoft.Xna.Framework.Audio;
 using System;
 
+using AnimatedSprite;
+
 namespace TileBasedPlayer20172018
 {
     /// <summary>
@@ -92,7 +94,6 @@ namespace TileBasedPlayer20172018
             SetColliders(TileType.GROUND);
             SetColliders(TileType.BLUEBOX);
             SetColliders(TileType.GREEN);
-
             base.Initialize();
         }
 
@@ -138,6 +139,20 @@ namespace TileBasedPlayer20172018
                 new TileRef(21, 8, 0),
             }, 64, 64, 0f);
                 sentries.Add(sentry);
+            }
+
+            for (int i = 0; i < sentries.Count; i++)
+            {
+                Projectile projectile = new Projectile(this, new List<TileRef>() {
+                new TileRef(8, 0, 0)
+                },
+                new AnimateSheetSprite(this, sentries[i].PixelPosition, new List<TileRef>() {
+                    new TileRef(0, 0, 0),
+                    new TileRef(1, 0, 1),
+                    new TileRef(2, 0, 2)
+                }, 64, 64, 0), sentries[i].PixelPosition, 1);
+
+                sentries[i].LoadProjectile(projectile);
             }
 
             explosion = Content.Load<SoundEffect>("SoundFiles/Explosion");
@@ -196,11 +211,17 @@ namespace TileBasedPlayer20172018
 
             for (int i = 0; i < sentries.Count; i++)
             {
-                if (sentries[i].inChaseZone(player))
+                sentries[i].follow(player);
+
+                if (sentries[i].sentryProjectile.ProjectileState == Projectile.PROJECTILE_STATE.EXPOLODING && sentries[i].sentryProjectile.collisionDetect(player))
                 {
-                    sentries[i].follow(player);
+                    if (!sentries[i].sentryProjectile.hit)
+                        player.Health -= 20;
+                    sentries[i].sentryProjectile.hit = true;
                 }
+
             }
+
 
             if (allTanksDestroyed)
             {
