@@ -18,7 +18,7 @@ namespace Tiler
         public Vector2 previousPosition;
         public float chaseRadius = 200;
         bool following = false;
-        Projectile sentryProjectile;
+        public Projectile sentryProjectile;
         Vector2 target;
         float previousAngleOfRotation = 0;
 

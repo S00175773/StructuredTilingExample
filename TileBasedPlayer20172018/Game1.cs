@@ -203,7 +203,14 @@ namespace TileBasedPlayer20172018
             for (int i = 0; i < sentries.Count; i++)
             {
                 sentries[i].follow(player);
-                
+
+                if (sentries[i].sentryProjectile.ProjectileState == Projectile.PROJECTILE_STATE.EXPOLODING && sentries[i].sentryProjectile.collisionDetect(player))
+                {
+                    if (!sentries[i].sentryProjectile.hit)
+                        player.Health -= 20;
+                    sentries[i].sentryProjectile.hit = true;
+                }
+
             }
 
 
