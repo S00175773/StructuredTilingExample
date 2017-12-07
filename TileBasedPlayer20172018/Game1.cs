@@ -161,7 +161,7 @@ namespace TileBasedPlayer20172018
             shoot = Content.Load<SoundEffect>("SoundFiles/TankShot");
             gameOverScreen = Content.Load<Texture2D>(@"Game-Over");
 
-            ////gameOverScreen.D
+            
 
             // TODO: use this.Content to load your game content here
         }
@@ -202,7 +202,7 @@ namespace TileBasedPlayer20172018
 
             TilePlayer player = Services.GetService<TilePlayer>();
 
-            if (!soundPlaying && player.Health <= 0)
+            if (!soundPlaying && player.Health >= 0)
             {
                 backgroundAudio.Play();
                 soundPlaying = true;
@@ -242,11 +242,13 @@ namespace TileBasedPlayer20172018
 
             TilePlayer player = Services.GetService<TilePlayer>();
 
-            spriteBatch.Begin();
+            
 
-            if (player.Health >= 0)
+            if (player.Health <= 0)
             {
+                spriteBatch.Begin();
                 spriteBatch.Draw(gameOverScreen, GraphicsDevice.Viewport.Bounds, Color.White);
+                spriteBatch.End();
             }
             /*else if (//all enemies are dead)
             {
@@ -256,8 +258,8 @@ namespace TileBasedPlayer20172018
             {
                 base.Draw(gameTime);
             }
-
-            spriteBatch.End();
+           
+            
         }
     }
 }

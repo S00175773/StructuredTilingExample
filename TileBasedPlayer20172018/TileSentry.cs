@@ -16,7 +16,7 @@ namespace Tiler
         //List<TileRef> images = new List<TileRef>() { new TileRef(15, 2, 0)};
         //TileRef currentFrame;
         public Vector2 previousPosition;
-        public float chaseRadius = 200;
+        public float chaseRadius = 300;
         bool following = false;
         public Projectile sentryProjectile;
         Vector2 target;
