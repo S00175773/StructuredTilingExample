@@ -10,6 +10,16 @@ using CameraNS;
 
 namespace Helpers
 {
+
+    public enum ActiveScreen { OPENING, PLAY, PAUSE };
+    public static class Helper
+    {
+
+        public static SpriteFont GameFont;
+        public static GraphicsDevice graphicsDevice;
+    }
+
+
     public class HealthBar : DrawableGameComponent
     {
         public int health;
@@ -45,6 +55,6 @@ namespace Helpers
                 spriteBatch.Draw(txHealthBar, HealthRect, Color.Red);
             spriteBatch.End();
         }
-
+        
     }
 }

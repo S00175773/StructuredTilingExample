@@ -3,11 +3,13 @@ using Engine.Engines;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Media;
 using System.Collections.Generic;
 using Tiler;
 using Tiling;
 using Helpers;
 using Microsoft.Xna.Framework.Audio;
+using System;
 
 namespace TileBasedPlayer20172018
 {
@@ -20,7 +22,7 @@ namespace TileBasedPlayer20172018
         SoundEffect shoot;
         SoundEffect backgroundAudio;
         SoundEffect gameOver;
-
+        Texture2D gameOverScreen;
 
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
@@ -33,6 +35,7 @@ namespace TileBasedPlayer20172018
         bool allTanksDestroyed = true;
 
         bool soundPlaying;
+
         public enum TileType { BLUEBOX, PAVEMENT, GROUND, GREEN, HOME, EXIT };
         int[,] tileMap = new int[,]
     {
@@ -104,6 +107,8 @@ namespace TileBasedPlayer20172018
             Services.AddService(spriteBatch);
             Services.AddService(Content.Load<Texture2D>(@"Tiles/tank tiles 64 x 64"));
 
+
+           
             // Tile References to be drawn on the Map corresponding to the entries in the defined 
             // Tile Map
             // "free", "pavement", "ground", "blue", "home", "exit" 
@@ -139,6 +144,9 @@ namespace TileBasedPlayer20172018
             backgroundAudio = Content.Load<SoundEffect>("SoundFiles/Battle_in_the_winter");
             gameOver = Content.Load<SoundEffect>("SoundFiles/Game_Over");
             shoot = Content.Load<SoundEffect>("SoundFiles/TankShot");
+            gameOverScreen = Content.Load<Texture2D>(@"Game-Over");
+
+            ////gameOverScreen.D
 
             // TODO: use this.Content to load your game content here
         }
@@ -177,13 +185,14 @@ namespace TileBasedPlayer20172018
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            if(!soundPlaying)
+            TilePlayer player = Services.GetService<TilePlayer>();
+
+            if (!soundPlaying && player.Health <= 0)
             {
                 backgroundAudio.Play();
                 soundPlaying = true;
             }
-
-            TilePlayer player = Services.GetService<TilePlayer>();
+            
 
             for (int i = 0; i < sentries.Count; i++)
             {
@@ -204,13 +213,30 @@ namespace TileBasedPlayer20172018
         /// <summary>
         /// This is called when the game should draw itself.
         /// </summary>
+        /// 
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
+            TilePlayer player = Services.GetService<TilePlayer>();
 
-            base.Draw(gameTime);
+            spriteBatch.Begin();
+
+            if (player.Health >= 0)
+            {
+                spriteBatch.Draw(gameOverScreen, GraphicsDevice.Viewport.Bounds, Color.White);
+            }
+            /*else if (//all enemies are dead)
+            {
+                spriteBatch.Draw(gameOverScreen, GraphicsDevice.Viewport.Bounds, Color.White);
+            }*/
+            else
+            {
+                base.Draw(gameTime);
+            }
+
+            spriteBatch.End();
         }
     }
 }
