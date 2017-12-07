@@ -7,7 +7,6 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Tiling;
 using Helpers;
-using TileBasedPlayer20172018;
 
 namespace AnimatedSprite
 {
@@ -39,7 +38,7 @@ namespace AnimatedSprite
                 set { explosion = value; }
             }
 
-            public Projectile(Game g, List<TileRef> texture, Explosion rocketExplosion, Vector2 userPosition, int frameCount) 
+            public Projectile(Game g, List<TileRef> texture, AnimateSheetSprite rocketExplosion, Vector2 userPosition, int frameCount) 
                 : base(g,userPosition, texture, 64, 64, frameCount)
             {
                 Target = Vector2.Zero;
@@ -72,7 +71,7 @@ namespace AnimatedSprite
                         projectileState = PROJECTILE_STATE.EXPOLODING;
                         break;
                     case PROJECTILE_STATE.EXPOLODING:
-                    explosion.DrawOrder = 1;
+                        explosion.DrawOrder = 1;
                         explosion.PixelPosition = Target;
                         explosion.Visible = true;
                         break;

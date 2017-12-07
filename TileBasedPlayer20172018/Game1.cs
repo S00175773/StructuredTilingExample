@@ -141,11 +141,11 @@ namespace TileBasedPlayer20172018
                 Projectile projectile = new Projectile(this, new List<TileRef>() {
                 new TileRef(8, 0, 0)
                 },
-                new Explosion(this, new List<TileRef>() {
+                new AnimateSheetSprite(this, sentries[i].PixelPosition, new List<TileRef>() {
                     new TileRef(0, 0, 0),
                     new TileRef(1, 0, 1),
                     new TileRef(2, 0, 2)
-                }, sentries[i].PixelPosition, 3), sentries[i].PixelPosition, 1);
+                }, 64, 64, 0), sentries[i].PixelPosition, 1);
 
                 sentries[i].LoadProjectile(projectile);
             }
