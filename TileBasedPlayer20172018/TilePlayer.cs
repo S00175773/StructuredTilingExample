@@ -20,6 +20,7 @@ namespace Tiler
         float turnspeed = 0.09f;
         public Vector2 previousPosition;
         public CrossHair crossHair;
+        public Projectile myProjectile;
 
         public TilePlayer(Game game, Vector2 userPosition, 
             List<TileRef> sheetRefs, int frameWidth, int frameHeight, float layerDepth) 
@@ -39,6 +40,11 @@ namespace Tiler
         {
             if (BoundingRectangle.Intersects(c.CollisionField))
                 PixelPosition = previousPosition;
+        }
+
+        public void LoadProjectile(Projectile p)
+        {
+            myProjectile = p;
         }
 
         public override void Update(GameTime gameTime)
@@ -68,6 +74,15 @@ namespace Tiler
                 this.angleOfRotation -= turnspeed;
             if (Keyboard.GetState().IsKeyDown(Keys.X))
                 this.angleOfRotation += turnspeed;
+
+            if (myProjectile != null && myProjectile.ProjectileState == Projectile.PROJECTILE_STATE.STILL)
+            {
+                myProjectile.PixelPosition = this.PixelPosition;
+                myProjectile.hit = false;
+                // fire the rocket and it looks for the target
+                if (Keyboard.GetState().IsKeyDown(Keys.Space))
+                    myProjectile.fire(crossHair.PixelPosition);
+            }
 
             base.Update(gameTime);
         }

@@ -123,6 +123,19 @@ namespace TileBasedPlayer20172018
             // Names fo the Tiles            
             new SimpleTileLayer(this, backTileNames, tileMap, TileRefs, tileWidth, tileHeight);
 
+            TilePlayer player = Services.GetService<TilePlayer>();
+
+            Projectile playerProjectile = new Projectile(this, new List<TileRef>() {
+                new TileRef(8, 0, 0)
+                },
+                new AnimateSheetSprite(this, player.PixelPosition, new List<TileRef>() {
+                    new TileRef(0, 0, 0),
+                    new TileRef(1, 0, 1),
+                    new TileRef(2, 0, 2)
+                }, 64, 64, 0), player.PixelPosition, 1);
+
+            player.LoadProjectile(playerProjectile);
+
             List<Tile> greenTiles = SimpleTileLayer.GetNamedTiles("green");
 
             //sentry sprite
