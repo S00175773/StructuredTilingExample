@@ -16,17 +16,20 @@ namespace Tiler
         //List<TileRef> images = new List<TileRef>() { new TileRef(15, 2, 0)};
         //TileRef currentFrame;
         public Vector2 previousPosition;
-        public float chaseRadius = 300;
+        public float chaseRadius = 200;
         bool following = false;
         public Projectile sentryProjectile;
         Vector2 target;
         float previousAngleOfRotation = 0;
+        bool alive = true;
+        public static int aliveSentries;
 
         public TileSentry(Game game, Vector2 userPosition,
             List<TileRef> sheetRefs, int frameWidth, int frameHeight, float layerDepth)
                 : base(game, userPosition, sheetRefs, frameWidth, frameHeight, layerDepth)
         {
             DrawOrder = 1;
+            aliveSentries++;
 
         }
 
@@ -59,9 +62,15 @@ namespace Tiler
             sentryProjectile.DrawOrder = 2;
         }
 
+        public void Die()
+        {
+            alive = false;
+            aliveSentries--;
+        }
+
         public override void Update(GameTime gameTime)
         {
-
+            if(alive) { 
             if (sentryProjectile != null && sentryProjectile.ProjectileState == Projectile.PROJECTILE_STATE.STILL)
             {
                 sentryProjectile.PixelPosition = this.PixelPosition;
@@ -74,12 +83,16 @@ namespace Tiler
             previousAngleOfRotation = angleOfRotation;
 
             base.Update(gameTime);
+            }
         }
         public override void Draw(GameTime gameTime)
         {
-            if (sentryProjectile != null && sentryProjectile.ProjectileState != Projectile.PROJECTILE_STATE.STILL)
-                sentryProjectile.Draw(gameTime);
-            base.Draw(gameTime);
+            if(alive)
+            {
+                if (sentryProjectile != null && sentryProjectile.ProjectileState != Projectile.PROJECTILE_STATE.STILL)
+                    sentryProjectile.Draw(gameTime);
+                base.Draw(gameTime);
+            }
         }
     }
 }

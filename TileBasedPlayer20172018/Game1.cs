@@ -166,6 +166,7 @@ namespace TileBasedPlayer20172018
                 }, 64, 64, 0), sentries[i].PixelPosition, 1);
 
                 sentries[i].LoadProjectile(projectile);
+                sentries[i].Health = 20;
             }
 
             explosion = Content.Load<SoundEffect>("SoundFiles/Explosion");
@@ -233,10 +234,19 @@ namespace TileBasedPlayer20172018
                     sentries[i].sentryProjectile.hit = true;
                 }
 
+                if(player.myProjectile.ProjectileState == Projectile.PROJECTILE_STATE.EXPOLODING && player.myProjectile.collisionDetect(sentries[i]))
+                {
+                    if(!player.myProjectile.hit)
+                    {
+                        sentries[i].Die();
+                        player.myProjectile.hit = true;
+                    }
+                }
             }
 
 
-            if (allTanksDestroyed)
+
+            if (TileSentry.aliveSentries <= 0)
             {
                 SimpleTileLayer.Tiles[15, 37].TileRef = TileRefs[5];
             }
