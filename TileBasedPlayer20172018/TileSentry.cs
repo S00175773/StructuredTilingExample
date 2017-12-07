@@ -18,7 +18,9 @@ namespace Tiler
         public Vector2 previousPosition;
         public float chaseRadius = 200;
         bool following = false;
+        Projectile sentryProjectile;
         Vector2 target;
+        float previousAngleOfRotation = 0;
 
         public TileSentry(Game game, Vector2 userPosition,
             List<TileRef> sheetRefs, int frameWidth, int frameHeight, float layerDepth)
@@ -46,13 +48,32 @@ namespace Tiler
             }
         }
 
+        public void LoadProjectile(Projectile r)
+        {
+            sentryProjectile = r;
+            sentryProjectile.DrawOrder = 2;
+        }
+
         public override void Update(GameTime gameTime)
         {
+
+            if (sentryProjectile != null && sentryProjectile.ProjectileState == Projectile.PROJECTILE_STATE.STILL)
+            {
+                sentryProjectile.PixelPosition = this.PixelPosition;
+                sentryProjectile.hit = false;
+                // fire the rocket and it looks for the target
+                if (following && previousAngleOfRotation == angleOfRotation)
+                    sentryProjectile.fire(target);
+            }
+
+            previousAngleOfRotation = angleOfRotation;
 
             base.Update(gameTime);
         }
         public override void Draw(GameTime gameTime)
         {
+            if (sentryProjectile != null && sentryProjectile.ProjectileState != Projectile.PROJECTILE_STATE.STILL)
+                sentryProjectile.Draw(gameTime);
             base.Draw(gameTime);
         }
     }

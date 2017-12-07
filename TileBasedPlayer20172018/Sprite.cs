@@ -115,7 +115,7 @@ namespace AnimatedSprite
             }
         }
 
-        protected List<TileRef> Frames = new List<TileRef>();
+        public List<TileRef> Frames = new List<TileRef>();
         private int _currentFrame;
         
         public AnimateSheetSprite(Game g, Vector2 userPosition, List<TileRef> sheetRefs, int frameWidth, int frameHeight, float layerDepth) : base(g)
