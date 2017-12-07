@@ -16,7 +16,7 @@ namespace Tiler
     {
         //List<TileRef> images = new List<TileRef>() { new TileRef(15, 2, 0)};
         //TileRef currentFrame;
-        int speed = 5;
+        int speed = 3;
         float turnspeed = 0.09f;
         public Vector2 previousPosition;
 

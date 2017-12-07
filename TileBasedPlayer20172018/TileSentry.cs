@@ -40,12 +40,17 @@ namespace Tiler
 
         public void follow(TilePlayer p)
         {
-            if (inChaseZone(p))
+            bool inchaseZone = inChaseZone(p);
+            if (inchaseZone)
             {
-                this.angleOfRotation = TurnToFace(PixelPosition, p.PixelPosition, angleOfRotation, .1f);
-                following = true;
+                this.angleOfRotation = TurnToFace(PixelPosition, p.PixelPosition, angleOfRotation, .3f);
+                this.following = true;
                 target = p.PixelPosition;
+            } else
+            {
+                this.following = false;
             }
+
         }
 
         public void LoadProjectile(Projectile r)

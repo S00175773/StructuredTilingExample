@@ -202,10 +202,7 @@ namespace TileBasedPlayer20172018
 
             for (int i = 0; i < sentries.Count; i++)
             {
-                if (sentries[i].inChaseZone(player))
-                {
-                    sentries[i].follow(player);                    
-                }
+                sentries[i].follow(player);
                 
             }
 
