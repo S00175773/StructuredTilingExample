@@ -19,14 +19,20 @@ namespace Tiler
         int speed = 3;
         float turnspeed = 0.09f;
         public Vector2 previousPosition;
+        public CrossHair crossHair;
 
         public TilePlayer(Game game, Vector2 userPosition, 
             List<TileRef> sheetRefs, int frameWidth, int frameHeight, float layerDepth) 
                 : base(game, userPosition, sheetRefs, frameWidth, frameHeight, layerDepth)
         {
             DrawOrder = 1;
-            
-            
+            crossHair = new CrossHair(game, new List<TileRef>()
+            {
+                new TileRef(11,6,0)
+            }, userPosition, 1);
+            crossHair.DrawOrder = 2;
+
+
         }
 
         public void Collision(Collider c)
