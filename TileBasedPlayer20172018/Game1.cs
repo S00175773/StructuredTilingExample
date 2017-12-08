@@ -22,8 +22,8 @@ namespace TileBasedPlayer20172018
     {
         SoundEffect explosion;
         SoundEffect shoot;
-        SoundEffect backgroundAudio;
-        SoundEffect gameOver;
+        Song backgroundAudio;
+        Song gameOver;
         Texture2D gameOverScreen;
 
         GraphicsDeviceManager graphics;
@@ -34,7 +34,7 @@ namespace TileBasedPlayer20172018
         List<Collider> colliders = new List<Collider>();
         List<TileSentry> sentries = new List<TileSentry>();
         string[] backTileNames = { "blue box", "pavement", "ground", "green", "home", "exit" };
-        bool allTanksDestroyed = true;
+        bool allTanksDestroyed = false;
 
         bool soundPlaying;
 
@@ -76,7 +76,7 @@ namespace TileBasedPlayer20172018
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-            new Camera(this, Vector2.Zero, 
+            new Camera(this, Vector2.Zero,
                 new Vector2(tileMap.GetLength(1) * tileWidth, tileMap.GetLength(0) * tileHeight));
             new InputEngine(this);
             Services.AddService(new TilePlayer(this, new Vector2(64, 128), new List<TileRef>()
@@ -109,7 +109,7 @@ namespace TileBasedPlayer20172018
             Services.AddService(Content.Load<Texture2D>(@"Tiles/tank tiles 64 x 64"));
 
 
-           
+
             // Tile References to be drawn on the Map corresponding to the entries in the defined 
             // Tile Map
             // "free", "pavement", "ground", "blue", "home", "exit" 
@@ -170,12 +170,14 @@ namespace TileBasedPlayer20172018
             }
 
             explosion = Content.Load<SoundEffect>("SoundFiles/Explosion");
-            backgroundAudio = Content.Load<SoundEffect>("SoundFiles/Battle_in_the_winter");
-            gameOver = Content.Load<SoundEffect>("SoundFiles/Game_Over");
             shoot = Content.Load<SoundEffect>("SoundFiles/TankShot");
+
+            backgroundAudio = Content.Load<Song>("SoundFiles/Battle_in_the_winter");
+            gameOver = Content.Load<Song>("SoundFiles/Game_Over");
+
             gameOverScreen = Content.Load<Texture2D>(@"Game-Over");
 
-            
+
 
             // TODO: use this.Content to load your game content here
         }
@@ -216,12 +218,34 @@ namespace TileBasedPlayer20172018
 
             TilePlayer player = Services.GetService<TilePlayer>();
 
-            if (!soundPlaying && player.Health >= 0)
+            if (!soundPlaying && player.Health > 0)
             {
-                backgroundAudio.Play();
+                MediaPlayer.Play(backgroundAudio);
                 soundPlaying = true;
             }
-            
+
+
+
+
+
+            if (player.Health <= 0) //music does play if the player moves the game box during the game over screen sometimes Can't figure out why
+            {
+                if (soundPlaying == true)
+                {
+                    MediaPlayer.Stop();
+                    soundPlaying = false;
+                }
+                else if(soundPlaying == false)
+                {
+                    MediaPlayer.Play(gameOver);
+                    soundPlaying = false;
+                }
+            }
+
+
+
+
+
 
             for (int i = 0; i < sentries.Count; i++)
             {
@@ -234,9 +258,9 @@ namespace TileBasedPlayer20172018
                     sentries[i].sentryProjectile.hit = true;
                 }
 
-                if(player.myProjectile.ProjectileState == Projectile.PROJECTILE_STATE.EXPOLODING && player.myProjectile.collisionDetect(sentries[i]))
+                if (player.myProjectile.ProjectileState == Projectile.PROJECTILE_STATE.EXPOLODING && player.myProjectile.collisionDetect(sentries[i]))
                 {
-                    if(!player.myProjectile.hit)
+                    if (!player.myProjectile.hit)
                     {
                         sentries[i].Die();
                         player.myProjectile.hit = true;
@@ -265,7 +289,7 @@ namespace TileBasedPlayer20172018
 
             TilePlayer player = Services.GetService<TilePlayer>();
 
-            
+
 
             if (player.Health <= 0)
             {
@@ -273,16 +297,26 @@ namespace TileBasedPlayer20172018
                 spriteBatch.Draw(gameOverScreen, GraphicsDevice.Viewport.Bounds, Color.White);
                 spriteBatch.End();
             }
-            /*else if (//all enemies are dead)
-            {
-                spriteBatch.Draw(gameOverScreen, GraphicsDevice.Viewport.Bounds, Color.White);
-            }*/
             else
             {
                 base.Draw(gameTime);
             }
-           
-            
+
+            /*if (TileSentry.aliveSentries <= 0)
+            {
+                spriteBatch.Begin();
+                spriteBatch.Draw(gameOverScreen, GraphicsDevice.Viewport.Bounds, Color.White);
+                spriteBatch.End();
+            }
+            if (allTanksDestroyed == true)
+            {
+                spriteBatch.Begin();
+                spriteBatch.Draw(gameOverScreen, GraphicsDevice.Viewport.Bounds, Color.White);
+                spriteBatch.End();
+            }*/
+
+
+
         }
     }
 }

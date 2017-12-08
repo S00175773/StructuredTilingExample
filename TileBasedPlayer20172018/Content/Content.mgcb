@@ -37,18 +37,6 @@
 /processorParam:TextureFormat=Color
 /build:Tiles/collider.png
 
-#begin SoundFiles/Battle_in_the_winter.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:SoundFiles/Battle_in_the_winter.wav
-
-#begin SoundFiles/Game_Over.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:SoundFiles/Game_Over.wav
-
 #begin SoundFiles/TankShot.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
@@ -72,4 +60,16 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Game-Over.jpg
+
+#begin SoundFiles/Game_Over.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:SoundFiles/Game_Over.mp3
+
+#begin SoundFiles/Battle_in_the_winter.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:SoundFiles/Battle_in_the_winter.mp3
 
