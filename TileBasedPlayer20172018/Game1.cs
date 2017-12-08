@@ -224,28 +224,15 @@ namespace TileBasedPlayer20172018
                 soundPlaying = true;
             }
 
-
-
-
-
-            if (player.Health <= 0) //music does play if the player moves the game box during the game over screen sometimes Can't figure out why
+            if (player.Health <= 0) 
             {
-                if (soundPlaying == true)
-                {
-                    MediaPlayer.Stop();
-                    soundPlaying = false;
-                }
-                else if(soundPlaying == false)
+                if (soundPlaying)
                 {
                     MediaPlayer.Play(gameOver);
                     soundPlaying = false;
                 }
             }
-
-
-
-
-
+            
 
             for (int i = 0; i < sentries.Count; i++)
             {
