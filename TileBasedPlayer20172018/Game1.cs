@@ -36,8 +36,9 @@ namespace TileBasedPlayer20172018
         List<TileSentry> sentries = new List<TileSentry>();
         string[] backTileNames = { "blue box", "pavement", "ground", "green", "home", "exit" };
         bool victory = false;
-
         bool soundPlaying;
+
+        TimeSpan timer;
 
         public enum TileType { BLUEBOX, PAVEMENT, GROUND, GREEN, HOME, EXIT };
         int[,] tileMap = new int[,]
@@ -261,6 +262,8 @@ namespace TileBasedPlayer20172018
                 SimpleTileLayer.Tiles[15, 37].TileRef = TileRefs[5];
             }
 
+            timer = new TimeSpan(0, 0, 100 - gameTime.TotalGameTime.Seconds);
+
             base.Update(gameTime);
         }
 
@@ -296,7 +299,7 @@ namespace TileBasedPlayer20172018
                 
                 base.Draw(gameTime);
                 spriteBatch.Begin();
-                spriteBatch.DrawString(font, "TEXT", new Vector2(10, 10), Color.White);
+                spriteBatch.DrawString(font, timer.TotalSeconds.ToString(), new Vector2(10, 10), Color.Purple);
                 spriteBatch.End();
             }
         }
