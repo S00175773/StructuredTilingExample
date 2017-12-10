@@ -225,7 +225,7 @@ namespace TileBasedPlayer20172018
             TilePlayer player = Services.GetService<TilePlayer>();
             if (player.Health > 0)
             {
-                if (!soundPlaying && player.Health > 0)
+                if (!soundPlaying && player.Health > 0 && timer.TotalSeconds > 0 && !victory)
                 {
                     MediaPlayer.Play(backgroundAudio);
                     soundPlaying = true;
@@ -240,21 +240,13 @@ namespace TileBasedPlayer20172018
                     }
                 }
 
-                if (timer.TotalSeconds <= 0)
-                {
-                    if (soundPlaying)
-                    {
-                        MediaPlayer.Play(gameOver);
-                        soundPlaying = false;
-                    }
-                }
-
                 if (victory)
                 {
                     if (soundPlaying)
                     {
                         MediaPlayer.Play(winner);
                         soundPlaying = false;
+                        timer = new TimeSpan(0,0,1);
                     }
                 }
 
@@ -289,7 +281,7 @@ namespace TileBasedPlayer20172018
                     SimpleTileLayer.Tiles[15, 37].TileRef = TileRefs[5];
                 }
 
-                timer = new TimeSpan(0, 0, 3 - gameTime.TotalGameTime.Seconds);
+                timer = new TimeSpan(0, 0, 200 - gameTime.TotalGameTime.Seconds);
 
                 base.Update(gameTime);
             }
