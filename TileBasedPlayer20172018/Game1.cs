@@ -226,22 +226,13 @@ namespace TileBasedPlayer20172018
 
 
 
-                if (!soundPlaying && player.Health > 0)
+                if (!soundPlaying && player.Health > 0 && timer.TotalSeconds > 0)
                 {
                     MediaPlayer.Play(backgroundAudio);
                     soundPlaying = true;
                 }
 
             if (player.Health <= 0 || timer.TotalSeconds <= 0)
-            {
-                if (soundPlaying)
-                {
-                    MediaPlayer.Play(gameOver);
-                    soundPlaying = false;
-                }
-            }
-
-            if (timer.TotalSeconds <= 0)
             {
                 if (soundPlaying)
                 {
@@ -313,7 +304,7 @@ namespace TileBasedPlayer20172018
             else if (victory)
             {
                 spriteBatch.Begin();
-                spriteBatch.Draw(gameOverScreen, GraphicsDevice.Viewport.Bounds, Color.White);
+                spriteBatch.Draw(youWinScreen, GraphicsDevice.Viewport.Bounds, Color.White);
                 spriteBatch.End();
             }
             ///When all enemies are dead draws the you win Screen.
