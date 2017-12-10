@@ -25,6 +25,7 @@ namespace TileBasedPlayer20172018
         Song backgroundAudio;
         Song gameOver;
         Texture2D gameOverScreen;
+        Texture2D youWinScreen;
 
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
@@ -176,6 +177,7 @@ namespace TileBasedPlayer20172018
             gameOver = Content.Load<Song>("SoundFiles/Game_Over");
 
             gameOverScreen = Content.Load<Texture2D>(@"Game-Over");
+            youWinScreen = Content.Load<Texture2D>(@"YouWin");
 
 
 
@@ -272,13 +274,20 @@ namespace TileBasedPlayer20172018
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
+            GraphicsDevice.Clear(Color.Gray);
 
             TilePlayer player = Services.GetService<TilePlayer>();
-
-
+            
 
             if (player.Health <= 0)
+            {
+                spriteBatch.Begin();
+                spriteBatch.Draw(gameOverScreen, GraphicsDevice.Viewport.Bounds, Color.White);
+                spriteBatch.End();
+            }
+            else if (TileSentry.aliveSentries <= 0)
+            ///When all enemies are dead draws the you win Screen.
+            ///Needs to be edited to allow the player to stand on the flag tile to Win.
             {
                 spriteBatch.Begin();
                 spriteBatch.Draw(gameOverScreen, GraphicsDevice.Viewport.Bounds, Color.White);
@@ -288,20 +297,6 @@ namespace TileBasedPlayer20172018
             {
                 base.Draw(gameTime);
             }
-
-            /*if (TileSentry.aliveSentries <= 0)
-            {
-                spriteBatch.Begin();
-                spriteBatch.Draw(gameOverScreen, GraphicsDevice.Viewport.Bounds, Color.White);
-                spriteBatch.End();
-            }
-            if (allTanksDestroyed == true)
-            {
-                spriteBatch.Begin();
-                spriteBatch.Draw(gameOverScreen, GraphicsDevice.Viewport.Bounds, Color.White);
-                spriteBatch.End();
-            }*/
-
 
 
         }
