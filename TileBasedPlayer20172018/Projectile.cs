@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Tiling;
 using Helpers;
+using Microsoft.Xna.Framework.Audio;
 
 namespace AnimatedSprite
 {
@@ -24,6 +25,11 @@ namespace AnimatedSprite
             float ExplosionVisibleLimit = 1000;
             Vector2 StartPosition;
         public bool hit = false;
+        SoundEffect fireSound;
+        SoundEffect explosionSound;
+
+        bool fireSoundPlaying = false;
+        bool explosionSoundPlaying = false;
 
 
         public PROJECTILE_STATE ProjectileState
@@ -58,6 +64,7 @@ namespace AnimatedSprite
                     case PROJECTILE_STATE.STILL:
                         this.Visible = false;
                         explosion.Visible = false;
+                        explosionSoundPlaying = false;
                         break;
                     // Using Lerp here could use target - pos and normalise for direction and then apply
                     // Velocity
@@ -67,10 +74,13 @@ namespace AnimatedSprite
                          // rotate towards the Target
                         this.angleOfRotation = TurnToFace(PixelPosition,
                                                 Target, angleOfRotation, 1f);
+                        PlayFireSound();
                     if (Vector2.Distance(PixelPosition, Target) < 2)
                         projectileState = PROJECTILE_STATE.EXPOLODING;
                         break;
                     case PROJECTILE_STATE.EXPOLODING:
+                        fireSoundPlaying = false;
+                        PlayExplosionSound();
                         explosion.DrawOrder = 1;
                         explosion.PixelPosition = Target;
                         explosion.Visible = true;
@@ -97,7 +107,35 @@ namespace AnimatedSprite
             {
             projectileState = PROJECTILE_STATE.FIRING;
                 Target = SiteTarget;
-            }   
+            }  
+        
+        public void AddFireSound(SoundEffect sound)
+        {
+            fireSound = sound;
+        }
+
+        public void PlayFireSound()
+        {
+            if(!fireSoundPlaying)
+            {
+                fireSound.Play();
+                fireSoundPlaying = true;
+            }            
+        }
+
+        public void PlayExplosionSound()
+        {
+            if (!explosionSoundPlaying)
+            {
+                explosionSound.Play();
+                explosionSoundPlaying = true;
+            }
+        }
+
+        public void AddExplosionSound(SoundEffect sound)
+        {
+            explosionSound = sound;
+        }
             public override void Draw(GameTime gameTime)
             {
                 base.Draw(gameTime);

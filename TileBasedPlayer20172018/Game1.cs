@@ -77,6 +77,14 @@ namespace TileBasedPlayer20172018
         /// </summary>
         protected override void Initialize()
         {
+            explosion = Content.Load<SoundEffect>("SoundFiles/Explosion");
+            shoot = Content.Load<SoundEffect>("SoundFiles/TankShot");
+
+            backgroundAudio = Content.Load<Song>("SoundFiles/Battle_in_the_winter");
+            gameOver = Content.Load<Song>("SoundFiles/Game_Over");
+
+            gameOverScreen = Content.Load<Texture2D>(@"Game-Over");
+            youWinScreen = Content.Load<Texture2D>(@"YouWin");
             // TODO: Add your initialization logic here
             new Camera(this, Vector2.Zero,
                 new Vector2(tileMap.GetLength(1) * tileWidth, tileMap.GetLength(0) * tileHeight));
@@ -135,6 +143,8 @@ namespace TileBasedPlayer20172018
                     new TileRef(2, 0, 2)
                 }, 64, 64, 0), player.PixelPosition, 1);
 
+            playerProjectile.AddFireSound(shoot);
+            playerProjectile.AddExplosionSound(explosion);
             player.LoadProjectile(playerProjectile);
 
             List<Tile> greenTiles = SimpleTileLayer.GetNamedTiles("green");
@@ -166,18 +176,13 @@ namespace TileBasedPlayer20172018
                     new TileRef(2, 0, 2)
                 }, 64, 64, 0), sentries[i].PixelPosition, 1);
 
+                projectile.AddFireSound(shoot);
+                projectile.AddExplosionSound(explosion);
                 sentries[i].LoadProjectile(projectile);
                 sentries[i].Health = 20;
             }
 
-            explosion = Content.Load<SoundEffect>("SoundFiles/Explosion");
-            shoot = Content.Load<SoundEffect>("SoundFiles/TankShot");
-
-            backgroundAudio = Content.Load<Song>("SoundFiles/Battle_in_the_winter");
-            gameOver = Content.Load<Song>("SoundFiles/Game_Over");
-
-            gameOverScreen = Content.Load<Texture2D>(@"Game-Over");
-            youWinScreen = Content.Load<Texture2D>(@"YouWin");
+            
             // TODO: use this.Content to load your game content here
         }
 
@@ -211,60 +216,66 @@ namespace TileBasedPlayer20172018
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
+            
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
             TilePlayer player = Services.GetService<TilePlayer>();
-
-            if (!soundPlaying && player.Health > 0)
+            if (player.Health > 0)
             {
-                MediaPlayer.Play(backgroundAudio);
-                soundPlaying = true;
-            }
 
-            if (player.Health <= 0) 
-            {
-                if (soundPlaying)
+
+
+                if (!soundPlaying && player.Health > 0)
                 {
-                    MediaPlayer.Play(gameOver);
-                    soundPlaying = false;
-                }
-            }            
-
-            for (int i = 0; i < sentries.Count; i++)
-            {
-                sentries[i].follow(player);
-
-                if (sentries[i].sentryProjectile.ProjectileState == Projectile.PROJECTILE_STATE.EXPOLODING && sentries[i].sentryProjectile.collisionDetect(player))
-                {
-                    if (!sentries[i].sentryProjectile.hit)
-                        player.Health -= 20;
-                    sentries[i].sentryProjectile.hit = true;
+                    MediaPlayer.Play(backgroundAudio);
+                    soundPlaying = true;
                 }
 
-                if (player.myProjectile.ProjectileState == Projectile.PROJECTILE_STATE.EXPOLODING && player.myProjectile.collisionDetect(sentries[i]))
+                if (player.Health <= 0)
                 {
-                    if (!player.myProjectile.hit)
+                    if (soundPlaying)
                     {
-                        sentries[i].Die();
-                        player.myProjectile.hit = true;
+                        MediaPlayer.Play(gameOver);
+                        soundPlaying = false;
                     }
                 }
+
+                for (int i = 0; i < sentries.Count; i++)
+                {
+                    sentries[i].follow(player);
+
+                    if (sentries[i].sentryProjectile.ProjectileState == Projectile.PROJECTILE_STATE.EXPOLODING && sentries[i].sentryProjectile.collisionDetect(player))
+                    {
+                        if (!sentries[i].sentryProjectile.hit)
+                            player.Health -= 20;
+                        sentries[i].sentryProjectile.hit = true;
+                    }
+
+                    if (player.myProjectile.ProjectileState == Projectile.PROJECTILE_STATE.EXPOLODING && player.myProjectile.collisionDetect(sentries[i]))
+                    {
+                        if (!player.myProjectile.hit)
+                        {
+                            sentries[i].Die();
+                            player.myProjectile.hit = true;
+                        }
+                    }
+                }
+
+                if (TileSentry.aliveSentries <= 0 && OnVictoryTile())
+                {
+                    victory = true;
+                }
+
+                if (TileSentry.aliveSentries <= 0)
+                {
+                    SimpleTileLayer.Tiles[15, 37].TileRef = TileRefs[5];
+                }
+
+                timer = new TimeSpan(0, 0, 100 - gameTime.TotalGameTime.Seconds);
+
+                base.Update(gameTime);
             }
-
-            if(TileSentry.aliveSentries <= 0 && OnVictoryTile())
-            {
-                victory = true;
-            }
-
-            if (TileSentry.aliveSentries <= 0)
-            {
-                SimpleTileLayer.Tiles[15, 37].TileRef = TileRefs[5];
-            }
-
-            timer = new TimeSpan(0, 0, 100 - gameTime.TotalGameTime.Seconds);
-
-            base.Update(gameTime);
         }
 
         /// <summary>
