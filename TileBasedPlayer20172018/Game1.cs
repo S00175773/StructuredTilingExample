@@ -108,8 +108,7 @@ namespace TileBasedPlayer20172018
             spriteBatch = new SpriteBatch(GraphicsDevice);
             Services.AddService(spriteBatch);
             Services.AddService(Content.Load<Texture2D>(@"Tiles/tank tiles 64 x 64"));
-
-
+            Services.AddService(Content.Load<SpriteFont>(@"Font"));
 
             // Tile References to be drawn on the Map corresponding to the entries in the defined 
             // Tile Map
@@ -178,9 +177,6 @@ namespace TileBasedPlayer20172018
 
             gameOverScreen = Content.Load<Texture2D>(@"Game-Over");
             youWinScreen = Content.Load<Texture2D>(@"YouWin");
-
-
-
             // TODO: use this.Content to load your game content here
         }
 
@@ -196,7 +192,6 @@ namespace TileBasedPlayer20172018
                             x, y
                             ));
                     }
-
                 }
         }
         /// <summary>
@@ -233,8 +228,7 @@ namespace TileBasedPlayer20172018
                     MediaPlayer.Play(gameOver);
                     soundPlaying = false;
                 }
-            }
-            
+            }            
 
             for (int i = 0; i < sentries.Count; i++)
             {
@@ -262,8 +256,6 @@ namespace TileBasedPlayer20172018
                 victory = true;
             }
 
-
-
             if (TileSentry.aliveSentries <= 0)
             {
                 SimpleTileLayer.Tiles[15, 37].TileRef = TileRefs[5];
@@ -282,7 +274,7 @@ namespace TileBasedPlayer20172018
             GraphicsDevice.Clear(Color.Gray);
 
             TilePlayer player = Services.GetService<TilePlayer>();
-            
+            SpriteFont font = Services.GetService<SpriteFont>();
 
             if (player.Health <= 0)
             {
@@ -301,10 +293,12 @@ namespace TileBasedPlayer20172018
             
             else
             {
+                
                 base.Draw(gameTime);
+                spriteBatch.Begin();
+                spriteBatch.DrawString(font, "TEXT", new Vector2(10, 10), Color.White);
+                spriteBatch.End();
             }
-
-
         }
 
         private bool OnVictoryTile()
