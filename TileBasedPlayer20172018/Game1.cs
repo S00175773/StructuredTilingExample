@@ -35,7 +35,7 @@ namespace TileBasedPlayer20172018
         List<Collider> colliders = new List<Collider>();
         List<TileSentry> sentries = new List<TileSentry>();
         string[] backTileNames = { "blue box", "pavement", "ground", "green", "home", "exit" };
-        bool allTanksDestroyed = false;
+        bool victory = false;
 
         bool soundPlaying;
 
@@ -257,6 +257,11 @@ namespace TileBasedPlayer20172018
                 }
             }
 
+            if(TileSentry.aliveSentries <= 0 && OnVictoryTile())
+            {
+                victory = true;
+            }
+
 
 
             if (TileSentry.aliveSentries <= 0)
@@ -285,20 +290,34 @@ namespace TileBasedPlayer20172018
                 spriteBatch.Draw(gameOverScreen, GraphicsDevice.Viewport.Bounds, Color.White);
                 spriteBatch.End();
             }
-            else if (TileSentry.aliveSentries <= 0)
-            ///When all enemies are dead draws the you win Screen.
-            ///Needs to be edited to allow the player to stand on the flag tile to Win.
+            else if (victory)
             {
                 spriteBatch.Begin();
                 spriteBatch.Draw(gameOverScreen, GraphicsDevice.Viewport.Bounds, Color.White);
                 spriteBatch.End();
             }
+            ///When all enemies are dead draws the you win Screen.
+            ///Needs to be edited to allow the player to stand on the flag tile to Win.
+            
             else
             {
                 base.Draw(gameTime);
             }
 
 
+        }
+
+        private bool OnVictoryTile()
+        {
+            TilePlayer player = Services.GetService<TilePlayer>();
+            if(player.PixelPosition.X > 37 * 64 && player.PixelPosition.X < 38*64)
+            {
+                if (player.PixelPosition.Y > 15 * 64 && player.PixelPosition.Y < 16 * 64)
+                {
+                    return true;
+                }
+            }
+            return false;
         }
     }
 }
