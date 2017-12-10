@@ -232,14 +232,23 @@ namespace TileBasedPlayer20172018
                     soundPlaying = true;
                 }
 
-                if (player.Health <= 0)
+            if (player.Health <= 0 || timer.TotalSeconds <= 0)
+            {
+                if (soundPlaying)
                 {
-                    if (soundPlaying)
-                    {
-                        MediaPlayer.Play(gameOver);
-                        soundPlaying = false;
-                    }
+                    MediaPlayer.Play(gameOver);
+                    soundPlaying = false;
                 }
+            }
+
+            if (timer.TotalSeconds <= 0)
+            {
+                if (soundPlaying)
+                {
+                    MediaPlayer.Play(gameOver);
+                    soundPlaying = false;
+                }
+            }
 
                 for (int i = 0; i < sentries.Count; i++)
                 {
@@ -272,7 +281,12 @@ namespace TileBasedPlayer20172018
                     SimpleTileLayer.Tiles[15, 37].TileRef = TileRefs[5];
                 }
 
-                timer = new TimeSpan(0, 0, 100 - gameTime.TotalGameTime.Seconds);
+            timer = new TimeSpan(0, 0, 3 - gameTime.TotalGameTime.Seconds);
+            if (timer.TotalSeconds > 0)
+            {
+                
+            }
+            
 
                 base.Update(gameTime);
             }
@@ -307,11 +321,17 @@ namespace TileBasedPlayer20172018
             
             else
             {
-                
                 base.Draw(gameTime);
                 spriteBatch.Begin();
-                spriteBatch.DrawString(font, timer.TotalSeconds.ToString(), new Vector2(10, 10), Color.Purple);
+                spriteBatch.DrawString(font, timer.TotalSeconds.ToString(), new Vector2(10, 10), Color.MonoGameOrange);
                 spriteBatch.End();
+
+                if (timer.TotalSeconds <= 0)
+                {
+                    spriteBatch.Begin();
+                    spriteBatch.Draw(gameOverScreen, GraphicsDevice.Viewport.Bounds, Color.White);
+                    spriteBatch.End();
+                }
             }
         }
 
