@@ -24,6 +24,7 @@ namespace TileBasedPlayer20172018
         SoundEffect shoot;
         Song backgroundAudio;
         Song gameOver;
+        Song winner;
         Texture2D gameOverScreen;
         Texture2D youWinScreen;
 
@@ -82,6 +83,7 @@ namespace TileBasedPlayer20172018
 
             backgroundAudio = Content.Load<Song>("SoundFiles/Battle_in_the_winter");
             gameOver = Content.Load<Song>("SoundFiles/Game_Over");
+            winner = Content.Load<Song>("SoundFiles/Winner");
 
             gameOverScreen = Content.Load<Texture2D>(@"Game-Over");
             youWinScreen = Content.Load<Texture2D>(@"YouWin");
@@ -182,7 +184,7 @@ namespace TileBasedPlayer20172018
                 sentries[i].Health = 20;
             }
 
-            
+
             // TODO: use this.Content to load your game content here
         }
 
@@ -216,30 +218,45 @@ namespace TileBasedPlayer20172018
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
-            
+
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
             TilePlayer player = Services.GetService<TilePlayer>();
             if (player.Health > 0)
             {
-
-
-
-                if (!soundPlaying && player.Health > 0 && timer.TotalSeconds > 0)
+                if (!soundPlaying && player.Health > 0)
                 {
                     MediaPlayer.Play(backgroundAudio);
                     soundPlaying = true;
                 }
 
-            if (player.Health <= 0 || timer.TotalSeconds <= 0)
-            {
-                if (soundPlaying)
+                if (player.Health <= 0 || timer.TotalSeconds <= 0)
                 {
-                    MediaPlayer.Play(gameOver);
-                    soundPlaying = false;
+                    if (soundPlaying)
+                    {
+                        MediaPlayer.Play(gameOver);
+                        soundPlaying = false;
+                    }
                 }
-            }
+
+                if (timer.TotalSeconds <= 0)
+                {
+                    if (soundPlaying)
+                    {
+                        MediaPlayer.Play(gameOver);
+                        soundPlaying = false;
+                    }
+                }
+
+                if (victory)
+                {
+                    if (soundPlaying)
+                    {
+                        MediaPlayer.Play(winner);
+                        soundPlaying = false;
+                    }
+                }
 
                 for (int i = 0; i < sentries.Count; i++)
                 {
@@ -272,12 +289,7 @@ namespace TileBasedPlayer20172018
                     SimpleTileLayer.Tiles[15, 37].TileRef = TileRefs[5];
                 }
 
-            timer = new TimeSpan(0, 0, 3 - gameTime.TotalGameTime.Seconds);
-            if (timer.TotalSeconds > 0)
-            {
-                
-            }
-            
+                timer = new TimeSpan(0, 0, 3 - gameTime.TotalGameTime.Seconds);
 
                 base.Update(gameTime);
             }
@@ -309,7 +321,7 @@ namespace TileBasedPlayer20172018
             }
             ///When all enemies are dead draws the you win Screen.
             ///Needs to be edited to allow the player to stand on the flag tile to Win.
-            
+
             else
             {
                 base.Draw(gameTime);
@@ -329,7 +341,7 @@ namespace TileBasedPlayer20172018
         private bool OnVictoryTile()
         {
             TilePlayer player = Services.GetService<TilePlayer>();
-            if(player.PixelPosition.X > 37 * 64 && player.PixelPosition.X < 38*64)
+            if (player.PixelPosition.X > 37 * 64 && player.PixelPosition.X < 38 * 64)
             {
                 if (player.PixelPosition.Y > 15 * 64 && player.PixelPosition.Y < 16 * 64)
                 {
